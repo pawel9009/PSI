@@ -7,4 +7,8 @@ Ipsum, a ostatnio z zawierającym różne wersje Lorem Ipsum oprogramowaniem prz
 druków na komputerach osobistych, jak Aldus PageMaker
 '''
 
-print(text)
+imie = "Pawel"
+nazwisko = "Budzinski"
+
+print("W texcie jest ",text.count(imie[2]), " liter ", imie[2],
+      "oraz ", text.count(nazwisko[3]), " lieter ", nazwisko[3] )
