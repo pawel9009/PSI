@@ -1,5 +1,2 @@
-napis = "Witaj swiecie"
-
-print(dir(napis))
-help(napis.capitalize())
-
+id = "Pawel Budzinski"
+print(id[::-1].capitalize())
