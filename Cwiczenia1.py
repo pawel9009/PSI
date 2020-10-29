@@ -1,2 +1,4 @@
-for x in range(10):
-      print(x+1)
+x = range(100, 20, -5)
+
+for i in x:
+      print(i)
