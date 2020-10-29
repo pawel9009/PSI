@@ -1,2 +1,3 @@
-krotka = (150509, 158531, "Janusz nowak", "Budzinski pawel")
+slownik = {150509: "Budzinski pawel", 150734: "Janusz nowak", 165344: "karol kowal"}
+
 
