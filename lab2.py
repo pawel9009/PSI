@@ -1,17 +1,13 @@
-list_b = [x for x in range(20)]
-list_a = [x for x in range(20)]
-nowa = []
-dl = len(list_a) + len(list_b)
+def fun(text):
+    dict = {"lenght": len(text), "letters": [letter for letter in text], "big_letters": text.upper(),
+            "small_letters": text.lower()}
+
+    print(dict["lenght"], end="\n")
+    print(dict["letters"], end="\n")
+    print(dict["big_letters"], end="\n")
+    print(dict["small_letters"], end="\n")
 
 
-def fun(lista_a, lista_b):
-    for x in range(len(list_a)):
-        if list_a[x] % 2 == 0:
-            nowa.append(lista_a[x])
-    for y in range(len(list_b)):
-        if list_b[y] % 2 == 1:
-            nowa.append(lista_b[y])
+slowo = "Hello word"
 
-
-fun(list_a, list_b)
-print(nowa)
+fun(slowo)
