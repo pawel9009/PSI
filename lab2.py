@@ -1,13 +1,13 @@
-def fun(text):
-    dict = {"lenght": len(text), "letters": [letter for letter in text], "big_letters": text.upper(),
-            "small_letters": text.lower()}
+def fun(text, litera):
+    zam = litera
+    zam += zam.upper()
+    for i in zam:
+        if i in text:
+            text = text.replace(i, '')
 
-    print(dict["lenght"], end="\n")
-    print(dict["letters"], end="\n")
-    print(dict["big_letters"], end="\n")
-    print(dict["small_letters"], end="\n")
+    print(text)
 
 
-slowo = "Hello word"
-
-fun(slowo)
+slowo = "AaHelalo awaaaoradaaaa"
+litera = 'a'
+fun(slowo, litera)
