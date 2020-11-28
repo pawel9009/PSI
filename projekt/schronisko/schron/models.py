@@ -1,39 +1,45 @@
 from django.db import models
 
+
 class Zwiarzak(models.Model):
-    idzwierzak = models.AutoField(primary_key=True)
-    imie = models.CharField(max_length=30, default="tak")
-    gatunek = models.CharField(max_length=30, default="pies")
-    rasa = models.CharField(max_length=30, default="cos")
-    wiek = models.DecimalField(max_digits=30, decimal_places=2 , default=0)
-    masa = models.DecimalField(max_digits=30, decimal_places=2, default=3)
+    id = models.AutoField(primary_key=True)
+    imie = models.CharField(max_length=30, default="")
+    gatunek = models.CharField(max_length=30, default="")
+    rasa = models.CharField(max_length=30, default="")
+    wiek = models.DecimalField(max_digits=4, decimal_places=2 , default=0)
+    waga = models.DecimalField(max_digits=4, decimal_places=2, default=0)
     def __str__(self):
         return self.imie
+
 
 class Pracownicy(models.Model):
-    idpracownika = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     imie = models.CharField(max_length=30, default="")
     nazwisko = models.CharField(max_length=30, default="")
-    stanowisko = models.CharField(max_length=30, default="cos")
+    stanowisko = models.CharField(max_length=30, default="")
     tel = models.DecimalField(max_digits=11, decimal_places=0 , default=0)
-    adres = models.CharField(max_length=30, default="cos")
+    adres = models.CharField(max_length=30, default="")
     def __str__(self):
-        return self.imie
+        return self.imie + ' ' + self.nazwisko
+
 
 class Klient(models.Model):
-    idpklienta = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     imie = models.CharField(max_length=30, default="")
     nazwisko = models.CharField(max_length=30, default="")
     tel = models.DecimalField(max_digits=11, decimal_places=0 , default=0)
+
     def __str__(self):
-        return self.imie
+        return self.imie + ' ' + self.nazwisko
+
 
 class Adopcja(models.Model):
-    idadopcji = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     data = models.DateField()
-    idklient = models.ForeignKey(Klient,on_delete=models.CASCADE,null=True)
-    idzwierzak = models.ForeignKey(Zwiarzak,on_delete=models.CASCADE,null=True)
+    idklienta = models.ForeignKey(Klient, on_delete=models.SET_NULL, null=True)
+    idzwierz = models.ForeignKey(Zwiarzak, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return self.data
+        return str(self.data)
+
 
