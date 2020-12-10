@@ -8,6 +8,7 @@ class Zwiarzak(models.Model):
     rasa = models.CharField(max_length=30, default="")
     wiek = models.DecimalField(max_digits=4, decimal_places=2 , default=0)
     waga = models.DecimalField(max_digits=4, decimal_places=2, default=0)
+
     def __str__(self):
         return self.imie
 
@@ -19,6 +20,7 @@ class Pracownicy(models.Model):
     stanowisko = models.CharField(max_length=30, default="")
     tel = models.DecimalField(max_digits=11, decimal_places=0 , default=0)
     adres = models.CharField(max_length=30, default="")
+
     def __str__(self):
         return self.imie + ' ' + self.nazwisko
 

@@ -11,7 +11,7 @@ class ZwierzakSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     imie = serializers.CharField(max_length=20, required=True, validators=[litery])
     gatunek = serializers.CharField(required=True, max_length=30)
-    rasa = serializers.CharField(max_length=30)
+    rasa = serializers.CharField(max_length=30 , required=True)
     wiek = serializers.DecimalField(required=True, max_digits=2, decimal_places=0)
     waga = serializers.DecimalField(required=True, max_digits=2, decimal_places=0)
 
@@ -82,9 +82,9 @@ class KlientSerializer(serializers.Serializer):
 
 class AdopcjaSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    data = serializers.DateField()
-    idklienta = serializers.IntegerField(null=True)
-    idzwierz = serializers.IntegerField(null=True)
+    data = serializers.DateField(required=True)
+    idklienta = serializers.IntegerField()
+    idzwierz = serializers.IntegerField()
 
     def create(self, validated_data):
         return Adopcja.objects.create(**validated_data)
