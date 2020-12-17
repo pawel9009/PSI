@@ -1,123 +1,112 @@
-from rest_framework import generics
+from rest_framework import generics, permissions, authentication
+from rest_framework.views import APIView
 from rest_framework.reverse import reverse
 from rest_framework.response import Response
-from .models import Pracownicy, Klient, Zwiarzak
-from .serializer import PracownicySerializer, KlientSerializer, ZwierzakSerializer
-from rest_framework import permissions
+from .models import Pracownicy, Klient as klientt, Zwiarzak, Adopcja
+from .serializer import PracownicySerializer, KlientSerializer, ZwierzakSerializer,AdopcjaSerializer
 from django.contrib.auth.models import User
 
 
-class PracownikinfoList(generics.ListCreateAPIView):
+class Pracownik(generics.ListCreateAPIView):
     queryset = Pracownicy.objects.all()
     serializer_class = PracownicySerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    name = 'Pracownicyinfo-list'
-    search_fields = ['name']
-    ordering_fields = ['name']
-
-
-class PracownicyDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Pracownicy.objects.all()
-    serializer_class = PracownicySerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    name = 'Pracownicy-detail'
-
-
-class PracownikList(generics.ListCreateAPIView):
-    queryset = Pracownicy.objects.all()
-    serializer_class = PracownicySerializer
-    name = 'Pracownik-list'
-    search_fields = ['imie', 'stanowsko']
-    ordering_fields = ['imie', 'nazwisko', 'stanowisko']
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+    name = "Pracownik"
+    permission_classes = [permissions.IsAuthenticated] # bez tego nei chce dodawać
 
 
 class PracownikDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Pracownicy.objects.all()
     serializer_class = PracownicySerializer
-    name = 'Pracownik-detail'
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAdminUser]  #tylko admin i ci co maja prawa moga usuwac
 
 
-#--------------------------------------------------------------------------
-
-
-class KlientinfoList(generics.ListCreateAPIView):
-    queryset = Klient.objects.all()
-    serializer_class = KlientSerializer
-    name = 'Klienciinfo-list'
-    search_fields = ['name']
-    ordering_fields = ['name']
-
-
-class KlienciDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Klient.objects.all()
-    serializer_class = KlientSerializer
-    name = 'Klienci-detail'
-
-
-class KlienciList(generics.ListCreateAPIView):
-    queryset = Klient.objects.all()
-    serializer_class = KlientSerializer
-    name = 'Klienci-list'
-    search_fields = ['imie', 'stanowsko', 'tel']
-    ordering_fields = ['imie', 'nazwisko', 'tel']
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+class PracownikDodaj(generics.ListCreateAPIView):
+    queryset = Pracownicy.objects.all()
+    serializer_class = PracownicySerializer
+    name = 'Pracownik-list'
+    search_fields = ['imie', 'stanowsko']
+    ordering_fields = ['imie', 'nazwisko', 'stanowisko']
+    permission_classes = [permissions.IsAdminUser]#dostepne dla zalogowanych
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+#----------------------------------------------------------
+
+
+class Klient(generics.ListCreateAPIView):
+    queryset = klientt.objects.all()
+    serializer_class = KlientSerializer
+    name = "Pracownik"
+    permission_classes = [permissions.IsAuthenticated] # bez tego nei chce dodawać
 
 
 class KlientDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Klient.objects.all()
+    queryset = klientt.objects.all()
     serializer_class = KlientSerializer
-    name = 'Klient-detail'
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-#--------------------------------------------------------------------
+    permission_classes = [permissions.IsAdminUser]
 
 
-class ZwierzakinfoList(generics.ListCreateAPIView):
-    queryset = Zwiarzak.objects.all()
-    serializer_class = ZwierzakSerializer
-    name = 'Zwiarzakinfo-list'
-    search_fields = ['name']
-    ordering_fields = ['name']
-
-
-class ZwierzakiDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Zwiarzak.objects.all()
-    serializer_class = ZwierzakSerializer
-    name = 'Zwiarzak-detail'
-
-
-class ZwierzakList(generics.ListCreateAPIView):
-    queryset = Zwiarzak.objects.all()
-    serializer_class = ZwierzakSerializer
-    name = 'Zwiarzak-list'
-    search_fields = ['imie', 'stanowsko', 'tel']
-    ordering_fields = ['imie', 'nazwisko', 'tel']
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+class KlientDodaj(generics.ListCreateAPIView):
+    queryset = klientt.objects.all()
+    serializer_class = KlientSerializer
+    name = 'Klient-list'
+    search_fields = ['imie', 'stanowsko']
+    ordering_fields = ['imie', 'nazwisko', 'stanowisko']
+    permission_classes = [permissions.IsAdminUser]#dostepne dla zalogowanych
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
 
-class ZwierzakDetail(generics.RetrieveUpdateDestroyAPIView):
+#---------------------------------------------------
+
+class zwierzak(generics.ListCreateAPIView):
     queryset = Zwiarzak.objects.all()
     serializer_class = ZwierzakSerializer
-    name = 'Zwiarzak-detail'
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    name = "zwierzak"
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class zwierzakDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Zwiarzak.objects.all()
+    serializer_class = ZwierzakSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+class zwierzakdodaj(generics.ListCreateAPIView):
+    queryset = Zwiarzak.objects.all()
+    serializer_class = ZwierzakSerializer
+    name = 'zwierzak-list'
+    search_fields = ['imie', 'stanowsko']
+    ordering_fields = ['imie', 'nazwisko', 'stanowisko']
+    permission_classes = [permissions.IsAdminUser]#dostepne dla zalogowanych
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+#-------------------------------------------------------
+
+class adopcja(generics.ListCreateAPIView):
+    queryset = Adopcja.objects.all()
+    serializer_class = AdopcjaSerializer
+    name = "adopcja"
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class adopcjadetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Adopcja.objects.all()
+    serializer_class = AdopcjaSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+
 
 
 class ApiRoot(generics.GenericAPIView):
     name = 'api-root'
 
     def get(self, request, *args, **kwargs):
-        return Response({'Pracownicy': reverse(PracownikList.name, request=request),
-                         'Klienci': reverse(KlienciList.name, request=request),
-                         'Zwierzaki': reverse(ZwierzakList.name, request=request),
+        return Response({'pracownik': reverse(Pracownik.name, request=request),
+                         'zwierzak': reverse(zwierzak.name, request=request),
+                         'klient': reverse(klientt.name, request=request),
+
                          })
