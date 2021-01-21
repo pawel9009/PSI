@@ -9,6 +9,9 @@ class Zwiarzak(models.Model):
     wiek = models.DecimalField(max_digits=4, decimal_places=2 , default=0)
     waga = models.DecimalField(max_digits=4, decimal_places=2, default=0)
 
+    class Meta:
+        ordering = ('imie',)
+
     def __str__(self):
         return self.imie
 
@@ -21,6 +24,9 @@ class Pracownicy(models.Model):
     tel = models.DecimalField(max_digits=11, decimal_places=0 , default=0)
     adres = models.CharField(max_length=30, default="")
 
+    class Meta:
+        ordering = ('imie',)
+
     def __str__(self):
         return self.imie + ' ' + self.nazwisko
 
@@ -31,6 +37,9 @@ class Klient(models.Model):
     nazwisko = models.CharField(max_length=30, default="")
     tel = models.DecimalField(max_digits=11, decimal_places=0 , default=0)
 
+    class Meta:
+        ordering = ('nazwisko',)
+
     def __str__(self):
         return self.imie + ' ' + self.nazwisko
 
@@ -38,10 +47,13 @@ class Klient(models.Model):
 class Adopcja(models.Model):
     id = models.AutoField(primary_key=True)
     data = models.DateField()
-    idklienta = models.ForeignKey(Klient, on_delete=models.SET_NULL, null=True)
+    idklienta = models.ForeignKey(Klient,  on_delete=models.SET_NULL, null=True)
     idzwierz = models.ForeignKey(Zwiarzak, on_delete=models.SET_NULL, null=True)
+
+    class Meta:
+        ordering = ('data',)
 
     def __str__(self):
         return str(self.data)
-
+#--------------------------------------------------------------------------
 

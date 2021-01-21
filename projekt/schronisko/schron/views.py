@@ -2,19 +2,22 @@ from rest_framework import generics, permissions, authentication
 from rest_framework.views import APIView
 from rest_framework.reverse import reverse
 from rest_framework.response import Response
-from .models import Pracownicy, Klient as klientt, Zwiarzak, Adopcja
+from .models import Pracownicy, Klient, Zwiarzak, Adopcja
 from .serializer import PracownicySerializer, KlientSerializer, ZwierzakSerializer,AdopcjaSerializer
-from django.contrib.auth.models import User
 
 
 class Pracownik(generics.ListCreateAPIView):
     queryset = Pracownicy.objects.all()
     serializer_class = PracownicySerializer
     name = "Pracownik"
+    filterset_fields = ['imie']
+    search_fields = ['imie']
+    ordering_fields = ['imie']
     permission_classes = [permissions.IsAuthenticated] # bez tego nei chce dodawać
 
 
 class PracownikDetail(generics.RetrieveUpdateDestroyAPIView):
+    name = 'pracownicy-detail'
     queryset = Pracownicy.objects.all()
     serializer_class = PracownicySerializer
     permission_classes = [permissions.IsAdminUser]  #tylko admin i ci co maja prawa moga usuwac
@@ -24,8 +27,6 @@ class PracownikDodaj(generics.ListCreateAPIView):
     queryset = Pracownicy.objects.all()
     serializer_class = PracownicySerializer
     name = 'Pracownik-list'
-    search_fields = ['imie', 'stanowsko']
-    ordering_fields = ['imie', 'nazwisko', 'stanowisko']
     permission_classes = [permissions.IsAdminUser]#dostepne dla zalogowanych
 
     def perform_create(self, serializer):
@@ -34,21 +35,22 @@ class PracownikDodaj(generics.ListCreateAPIView):
 #----------------------------------------------------------
 
 
-class Klient(generics.ListCreateAPIView):
-    queryset = klientt.objects.all()
+class Klientt(generics.ListCreateAPIView):
+    queryset = Klient.objects.all()
     serializer_class = KlientSerializer
-    name = "Pracownik"
+    name = "Klient"
     permission_classes = [permissions.IsAuthenticated] # bez tego nei chce dodawać
 
 
 class KlientDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = klientt.objects.all()
+    name = 'klient-detail'
+    queryset = Klient.objects.all()
     serializer_class = KlientSerializer
     permission_classes = [permissions.IsAdminUser]
 
 
 class KlientDodaj(generics.ListCreateAPIView):
-    queryset = klientt.objects.all()
+    queryset = Klient.objects.all()
     serializer_class = KlientSerializer
     name = 'Klient-list'
     search_fields = ['imie', 'stanowsko']
@@ -68,8 +70,9 @@ class zwierzak(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
 
-class zwierzakDetail(generics.RetrieveUpdateDestroyAPIView):
+class ZwierzakDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Zwiarzak.objects.all()
+    name = "zwiarzak-detail"
     serializer_class = ZwierzakSerializer
     permission_classes = [permissions.IsAdminUser]
 
@@ -79,12 +82,13 @@ class zwierzakdodaj(generics.ListCreateAPIView):
     name = 'zwierzak-list'
     search_fields = ['imie', 'stanowsko']
     ordering_fields = ['imie', 'nazwisko', 'stanowisko']
-    permission_classes = [permissions.IsAdminUser]#dostepne dla zalogowanych
+    permission_classes = [permissions.IsAdminUser] #dostepne dla zalogowanych
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
 #-------------------------------------------------------
+
 
 class adopcja(generics.ListCreateAPIView):
     queryset = Adopcja.objects.all()
@@ -94,11 +98,22 @@ class adopcja(generics.ListCreateAPIView):
 
 
 class adopcjadetail(generics.RetrieveUpdateDestroyAPIView):
+    name = 'adopcja-detail'
     queryset = Adopcja.objects.all()
     serializer_class = AdopcjaSerializer
     permission_classes = [permissions.IsAdminUser]
 
 
+class adopcjadodaj(generics.ListCreateAPIView):
+    queryset = Adopcja.objects.all()
+    serializer_class = AdopcjaSerializer
+    name = 'adopcja-list'
+    search_fields = ['imie', 'stanowsko']
+    ordering_fields = ['imie', 'nazwisko', 'stanowisko']
+    permission_classes = [permissions.IsAdminUser]#dostepne dla zalogowanych
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 
 class ApiRoot(generics.GenericAPIView):
@@ -107,6 +122,7 @@ class ApiRoot(generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
         return Response({'pracownik': reverse(Pracownik.name, request=request),
                          'zwierzak': reverse(zwierzak.name, request=request),
-                         'klient': reverse(klientt.name, request=request),
-
-                         })
+                         'klient': reverse(Klientt.name, request=request),
+                         'adopcja': reverse(adopcja.name, request=request),
+                         }
+                        )
