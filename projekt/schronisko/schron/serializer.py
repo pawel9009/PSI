@@ -9,9 +9,11 @@ from django.core.validators import RegexValidator
 
 
 class ZwierzakSerializer(serializers.ModelSerializer):
+    zwierze = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='adopcja-detail')
+
     class Meta:
         model = Zwiarzak
-        fields = ['url', 'id', 'imie', 'gatunek', 'rasa', 'wiek', 'waga']
+        fields = ['url', 'id', 'imie', 'gatunek', 'rasa', 'wiek', 'waga', 'zwierze']
 
 
 class PracownicySerializer(serializers.ModelSerializer):
@@ -20,13 +22,16 @@ class PracownicySerializer(serializers.ModelSerializer):
         fields = ['url', 'id', 'imie', 'nazwisko', 'stanowisko', 'tel', 'adres']
 
 
-class KlientSerializer(serializers.ModelSerializer):
+class KlientSerializer(serializers.HyperlinkedModelSerializer):
+    klient = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='adopcja-detail')
     class Meta:
         model = Klient
-        fields = ['url', 'id', 'imie', 'nazwisko', 'tel']
+        fields = ['url', 'id', 'imie', 'nazwisko', 'tel', 'klient']
 
 
-class AdopcjaSerializer(serializers.ModelSerializer):
+class AdopcjaSerializer(serializers.HyperlinkedModelSerializer):
+    idklienta = serializers.SlugRelatedField(queryset=Klient.objects.all(), slug_field='imie')
+    idzwierz = serializers.SlugRelatedField(queryset=Zwiarzak.objects.all(), slug_field='imie')
     class Meta:
         model = Adopcja
-        fields = ['url', 'id', 'data', 'idklienta', 'idzwierz']
+        fields = ['url', 'id', 'data', 'idklienta','idzwierz' ]

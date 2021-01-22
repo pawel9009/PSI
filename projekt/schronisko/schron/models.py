@@ -47,8 +47,8 @@ class Klient(models.Model):
 class Adopcja(models.Model):
     id = models.AutoField(primary_key=True)
     data = models.DateField()
-    idklienta = models.ForeignKey(Klient,  on_delete=models.SET_NULL, null=True)
-    idzwierz = models.ForeignKey(Zwiarzak, on_delete=models.SET_NULL, null=True)
+    idklienta = models.ForeignKey(Klient, related_name='klient', on_delete=models.SET_NULL, null=True)
+    idzwierz = models.ForeignKey(Zwiarzak, related_name='zwierze', on_delete=models.SET_NULL, null=True)
 
     class Meta:
         ordering = ('data',)

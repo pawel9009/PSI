@@ -43,9 +43,9 @@ class Klientt(generics.ListCreateAPIView):
 
 
 class KlientDetail(generics.RetrieveUpdateDestroyAPIView):
-    name = 'klient-detail'
     queryset = Klient.objects.all()
     serializer_class = KlientSerializer
+    name = 'klient-detail'
     permission_classes = [permissions.IsAdminUser]
 
 
