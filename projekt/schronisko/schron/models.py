@@ -21,8 +21,9 @@ class Pracownicy(models.Model):
     imie = models.CharField(max_length=30, default="")
     nazwisko = models.CharField(max_length=30, default="")
     stanowisko = models.CharField(max_length=30, default="")
-    tel = models.DecimalField(max_digits=11, decimal_places=0 , default=0)
+    tel = models.DecimalField(max_digits=11, decimal_places=0 , default=0, unique=True)
     adres = models.CharField(max_length=30, default="")
+    wlasciciel = models.ForeignKey('auth.User', related_name='pracownik', on_delete=models.CASCADE)
 
     class Meta:
         ordering = ('imie',)
@@ -35,7 +36,7 @@ class Klient(models.Model):
     id = models.AutoField(primary_key=True)
     imie = models.CharField(max_length=30, default="")
     nazwisko = models.CharField(max_length=30, default="")
-    tel = models.DecimalField(max_digits=11, decimal_places=0 , default=0)
+    tel = models.DecimalField(max_digits=11, decimal_places=0 , default=0, unique=True)
 
     class Meta:
         ordering = ('nazwisko',)

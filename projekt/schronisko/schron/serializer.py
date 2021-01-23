@@ -17,9 +17,10 @@ class ZwierzakSerializer(serializers.ModelSerializer):
 
 
 class PracownicySerializer(serializers.ModelSerializer):
+    wlasciciel = serializers.ReadOnlyField(source='wlasciciel.username')
     class Meta:
         model = Pracownicy
-        fields = ['url', 'id', 'imie', 'nazwisko', 'stanowisko', 'tel', 'adres']
+        fields = ['url', 'id', 'imie', 'nazwisko', 'stanowisko', 'tel', 'adres', 'wlasciciel']
 
 
 class KlientSerializer(serializers.HyperlinkedModelSerializer):
@@ -35,3 +36,17 @@ class AdopcjaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Adopcja
         fields = ['url', 'id', 'data', 'idklienta','idzwierz' ]
+
+
+class UserPracownikSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Pracownicy
+        fields = ['url', 'imie', 'nazwisko']
+
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    pracownicy = UserPracownikSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['url', 'pk', 'username', 'pracownicy']
