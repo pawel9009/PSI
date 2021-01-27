@@ -8,7 +8,7 @@ class Zwiarzak(models.Model):
     rasa = models.CharField(max_length=30, default="")
     wiek = models.DecimalField(max_digits=4, decimal_places=2, default=0)
     waga = models.DecimalField(max_digits=4, decimal_places=2, default=0)
-    wlasciciel = models.ForeignKey('auth.User', related_name='zwierzak', on_delete=models.CASCADE)
+    wlasciciel = models.ForeignKey('auth.User', related_name='zwierzak', on_delete=models.CASCADE, null=True)
 
     class Meta:
         ordering = ('imie',)

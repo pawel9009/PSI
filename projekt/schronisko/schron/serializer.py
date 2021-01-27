@@ -3,9 +3,7 @@ from .models import Zwiarzak
 from .models import Pracownicy
 from .models import Adopcja
 from .models import Klient
-from rest_framework.serializers import HyperlinkedIdentityField
 from django.contrib.auth.models import User
-from django.core.validators import RegexValidator
 
 
 class ZwierzakSerializer(serializers.ModelSerializer):
@@ -39,7 +37,7 @@ class AdopcjaSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Adopcja
-        fields = ['url', 'id', 'data', 'idklienta','idzwierz' ]
+        fields = ['url', 'id', 'data', 'idklienta', 'idzwierz' ]
 
 
 class UserPracownikSerializer(serializers.HyperlinkedModelSerializer):
@@ -56,7 +54,6 @@ class UserZwierzakSerializer(serializers.HyperlinkedModelSerializer):
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     pracownicy = UserPracownikSerializer(many=True, read_only=True)
-
 
     class Meta:
         model = User

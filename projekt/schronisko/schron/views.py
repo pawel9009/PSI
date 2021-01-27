@@ -1,10 +1,9 @@
-from rest_framework import generics, permissions, authentication
-from rest_framework.views import APIView
+from rest_framework import generics, permissions
 from rest_framework.reverse import reverse
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from .models import Pracownicy, Klient, Zwiarzak, Adopcja
-from .serializer import PracownicySerializer, KlientSerializer, ZwierzakSerializer,AdopcjaSerializer,UserSerializer
+from .serializer import PracownicySerializer, KlientSerializer, ZwierzakSerializer, AdopcjaSerializer, UserSerializer
 
 
 class Pracownik(generics.ListCreateAPIView):
@@ -15,6 +14,7 @@ class Pracownik(generics.ListCreateAPIView):
     search_fields = ['imie', 'nazwisko', 'stanowisko']
     ordering_fields = ['imie', 'nazwisko', 'stanowisko']
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
     def perform_create(self, serializer):
         serializer.save(wlasciciel=self.request.user)
 
@@ -31,7 +31,6 @@ class PracownikDodaj(generics.ListCreateAPIView):
     serializer_class = PracownicySerializer
     name = 'Pracownik-list'
     permission_classes = [permissions.IsAdminUser]
-
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -70,6 +69,7 @@ class KlientDodaj(generics.ListCreateAPIView):
 
 #---------------------------------------------------
 
+
 class zwierzak(generics.ListCreateAPIView):
     queryset = Zwiarzak.objects.all()
     serializer_class = ZwierzakSerializer
@@ -77,10 +77,10 @@ class zwierzak(generics.ListCreateAPIView):
     filterset_fields = ['imie', 'gatunek', 'rasa', 'waga', 'wiek']
     search_fields = ['imie', 'gatunek', 'rasa', 'waga', 'wiek']
     ordering_fields = ['imie', 'gatunek', 'rasa', 'waga', 'wiek']
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    def perform_create(self, serializer):
-        serializer.save(wlasciciel=self.request.user)
+    # def perform_create(self, serializer):
+    #     serializer.save(wlasciciel=self.request.user)
 
 
 class ZwierzakDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -94,7 +94,7 @@ class zwierzakdodaj(generics.ListCreateAPIView):
     queryset = Zwiarzak.objects.all()
     serializer_class = ZwierzakSerializer
     name = 'zwierzak-list'
-    permission_classes = [permissions.IsAdminUser] #dostepne dla zalogowanych
+    permission_classes = [permissions.IsAdminUser]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -123,7 +123,7 @@ class adopcjadodaj(generics.ListCreateAPIView):
     name = 'adopcja-list'
     search_fields = ['imie', 'stanowsko']
     ordering_fields = ['imie', 'nazwisko', 'stanowisko']
-    permission_classes = [permissions.IsAdminUser]#dostepne dla zalogowanych
+    permission_classes = [permissions.IsAdminUser]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -140,7 +140,6 @@ class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     name = 'user-detail'
-
 
 
 class ApiRoot(generics.GenericAPIView):

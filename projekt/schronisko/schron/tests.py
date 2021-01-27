@@ -1,13 +1,11 @@
 from rest_framework.test import APITestCase
 from . import views
-from .models import Pracownicy
 from .models import Klient
+from .models import Zwiarzak
 from rest_framework import status
 from rest_framework.reverse import reverse
 from django.utils.http import urlencode
-from rest_framework.authtoken.models import Token
-from django.contrib.auth.models import User
-from django import urls
+
 
 class KlientTests(APITestCase):
 
@@ -35,4 +33,31 @@ class KlientTests(APITestCase):
         assert response_two.status_code == status.HTTP_400_BAD_REQUEST
 
 
+class ZwierzakTests(APITestCase):
+
+    def post_zwierzak(self, imie):
+        url = reverse(views.zwierzak.name)
+        data = {'imie': imie}
+        response = self.client.post(url, data, format('json'))
+        return response
+
+    def test_post_and_get_zwierzak(self):
+        nowe_imie = "rex"
+        response = self.post_zwierzak(nowe_imie)
+        assert response.status_code == status.HTTP_201_CREATED
+        assert Zwiarzak.objects.count() == 1
+        assert Zwiarzak.objects.get().imie == nowe_imie
+
+    def test_filter_zwierzak_by_gatunek(self):
+        zwierzak_gatunek_one = 'pies'
+        zwierzak_gatunek_two = 'kot'
+        self.post_zwierzak(zwierzak_gatunek_one)
+        self.post_zwierzak(zwierzak_gatunek_two)
+        filter_by_gatunek = {'gatunek': zwierzak_gatunek_one}
+        url = '{0}?{1}'.format(reverse(views.zwierzak.name), urlencode(filter_by_gatunek))
+        print(url)
+        response = self.client.get(url, format='json')
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['count'] == 1
+        assert response.data['results'][0]['name'] == zwierzak_gatunek_one
 
