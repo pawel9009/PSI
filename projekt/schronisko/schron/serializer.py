@@ -10,14 +10,16 @@ from django.core.validators import RegexValidator
 
 class ZwierzakSerializer(serializers.ModelSerializer):
     zwierze = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='adopcja-detail')
+    wlasciciel = serializers.ReadOnlyField(source='wlasciciel.username')
 
     class Meta:
         model = Zwiarzak
-        fields = ['url', 'id', 'imie', 'gatunek', 'rasa', 'wiek', 'waga', 'zwierze']
+        fields = ['url', 'id', 'imie', 'gatunek', 'rasa', 'wiek', 'waga', 'zwierze', 'wlasciciel']
 
 
 class PracownicySerializer(serializers.ModelSerializer):
     wlasciciel = serializers.ReadOnlyField(source='wlasciciel.username')
+
     class Meta:
         model = Pracownicy
         fields = ['url', 'id', 'imie', 'nazwisko', 'stanowisko', 'tel', 'adres', 'wlasciciel']
@@ -25,6 +27,7 @@ class PracownicySerializer(serializers.ModelSerializer):
 
 class KlientSerializer(serializers.HyperlinkedModelSerializer):
     klient = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='adopcja-detail')
+
     class Meta:
         model = Klient
         fields = ['url', 'id', 'imie', 'nazwisko', 'tel', 'klient']
@@ -33,6 +36,7 @@ class KlientSerializer(serializers.HyperlinkedModelSerializer):
 class AdopcjaSerializer(serializers.HyperlinkedModelSerializer):
     idklienta = serializers.SlugRelatedField(queryset=Klient.objects.all(), slug_field='imie')
     idzwierz = serializers.SlugRelatedField(queryset=Zwiarzak.objects.all(), slug_field='imie')
+
     class Meta:
         model = Adopcja
         fields = ['url', 'id', 'data', 'idklienta','idzwierz' ]
@@ -44,8 +48,15 @@ class UserPracownikSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'imie', 'nazwisko']
 
 
+class UserZwierzakSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Zwiarzak
+        fields = ['url', 'imie']
+
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     pracownicy = UserPracownikSerializer(many=True, read_only=True)
+
 
     class Meta:
         model = User
